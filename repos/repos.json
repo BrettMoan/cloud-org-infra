@@ -36,8 +36,8 @@
     "auto_init": true
   },
   {
-    "name": "network-config",
-    "description": "DNS, subdomain, and routing infrastructure.",
+    "name": "cloud-org-infra",
+    "description": "Cloud organization infrastructure, including DNS, subdomain, routing, and cloud resource management.",
     "visibility": "public",
     "has_issues": true,
     "has_wiki": false,
