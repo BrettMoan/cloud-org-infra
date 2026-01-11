@@ -1,50 +1,93 @@
-# github-org-infra
+# cloud-org-infra
 
-This repository manages GitHub organization infrastructure using Terraform. It automates the creation and configuration of repositories, teams, branch protections, and secrets to demonstrate best practices in GitHub org management and Infrastructure as Code (IaC).
+This repository manages cloud organization infrastructure, including DNS, subdomain, routing, and broader cloud resource configuration using Terraform and AWS. It demonstrates modular, automated setup for cloud-native applications, organizational controls, and CI/CD powered by GitHub Actions and OIDC authentication.
 
 ## Features
-- Automated repo creation and configuration
-- Leverages Terraform cloud VCS intergartion for free state management (important as the cloud is not setup yet as the repo where cloud will be configured doesn't exist until this has been setup)
+- DNS zone and record management (Route53)
+- Subdomain, routing, and cloud resource configuration
+- Organizational controls and modular infrastructure-as-code design
+- OIDC-enabled GitHub Actions workflow
 
 ## Part of a Multi-Repo Demo
 This repo is part of a larger, opinionated infrastructure demonstration. See the [brettmoan main overview](https://github.com/brettmoan/README.md) for the full architecture and design rationale.
 
 ---
 
-## Setup Steps
+## First time setup
 
 
-1. **Create a GitHub Personal Access Token (PAT):**
-	- Go to [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens).
-	- Click "Generate new token" and select the `repo` scope.
-	- Copy and store the PAT securely.
+1. Create an aws account: create a new free tier account at https://portal.aws.amazon.com/billing/signup?type=register
+1. login to the root user, where we will setup the initial boot strap obejects to enable this project to connect to aws over github
+1. create IAM policy: Yes! In the AWS Console, you can create a custom policy by pasting JSON directly:
+    1. Go to IAM > Policies:  https://console.aws.amazon.com/iam/home#/policies
+    1. Click "Create policy".
+    1. Select the "JSON" tab.
+    1. Paste your policy JSON and click "Next".
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "iam:CreateRole",
+                    "iam:PutRolePolicy",
+                    "iam:AttachRolePolicy",
+                    "iam:CreatePolicy",
+                    "iam:CreateOpenIDConnectProvider",
+                    "iam:DeletePolicyVersion",
+                    "iam:GetOpenIDConnectProvider",
+                    "iam:GetPolicy",
+                    "iam:GetPolicyVersion",
+                    "iam:GetRole",
+                    "iam:ListAttachedRolePolicies",
+                    "iam:ListInstanceProfilesForRole",
+                    "iam:ListPolicyVersions",
+                    "iam:ListRolePolicies",
+                    "iam:ListRoles",
+                    "iam:DeleteRole",
+                    "iam:DeleteRolePolicy",
+                    "iam:DetachRolePolicy",
+                    "iam:DeletePolicy",
+                    "iam:DeleteOpenIDConnectProvider",
+                    "iam:UpdateAssumeRolePolicy",
+                    "iam:TagRole",
+                    "iam:UntagRole"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+    ```
+    1. Click next
+    1. name the policy `bootstrap` and description of `bootstrap`
+    1. click create. You should land back on the "policies" page and see a banner that says "policy bootstrap created."
 
-2. **Run locally via Terraform (no remote state):**
-	- Remove or comment out the `terraform { cloud { ... } }` block from `main.tf`.
-	- Ensure the `terraform { required_providers { ... } }` block is present.
-	- Store the PAT securely on your local machine (e.g., as an environment variable: `export GITHUB_TOKEN=your_pat` on Linux/macOS, or `$env:GITHUB_TOKEN = 'your_pat'` on Windows PowerShell).
-	- The provider will automatically use the `GITHUB_TOKEN` environment variable if the `token` argument is not set.
-	- Run `terraform init` and `terraform apply` locally.
-
-2. **Set up a Terraform Cloud organization:**
-	- Go to [Terraform Cloud](https://app.terraform.io/) and sign up or log in.
-	- Create a new organization (e.g., `brettmoan`).
-
-3. **Add the PAT to Terraform Cloud workspace variables:**
-	- In Terraform Cloud, go to your workspace (e.g., `github-org-infra`).
-	- Navigate to "Variables" and add a new environment variable named `GITHUB_TOKEN`.
-	- Paste your GitHub PAT (with `repo` scope) and mark it as sensitive.
-
-
-5. **Configure Automatic Run Triggering:**
-	- In your Terraform Cloud workspace, go to Settings → Version Control.
-	- Under "Automatic Run Triggering," select "Only trigger runs when files in specified paths change."
-	- Add the following path filters:
-	  ```
-	  *.tf
-	  **/*.tf
-	  *.json
-	  **/*.json
-	  ```
-	- This ensures runs only trigger when .tf or .json files (including those in subdirectories) change.
-    - make sure to click "update VCS settings" button or the settings are not applied
+1. create a user https://console.aws.amazon.com/iam/home#/users --> 
+    1. click create user. 
+    1. name the user `bootstrap` to denote that it is being used to bootstap the initial steps via commandline.
+    1. click `next` to go to step 2 `set permissions`
+    1. keep `add user to group` selected. then select `create group`
+    1. name the group `cloud-org-infra`
+    1. under permissions polcies, search for and select `cloud-org-infra` created previously (you may need to hit the refresh button to make it appear).
+    1. click `Create user group`
+    1. check the box next to the newly created uiser group `cloud-org-infra` 
+    1. click `Next` to go to step 3 `Review and create`
+    1. review the settings, and click `create user`
+1. get AWS Access key 
+    1. go to the newly created `bootstrap` user from https://console.aws.amazon.com/iam/home#/users 
+    1. click on `bootstrap` user 
+    1. Go to the `Security credentials` tab.
+    1. Scroll to `Access keys` and click `Create access key`.
+    1. Choose `Command Line Interface (CLI)` as the use case, then click `Next`. 
+    1. click the `Confirmation I understand the above recommendation and want to proceed to create an access key.`
+        - because this is a bootstap, it will violate best practice for long term access. don't worry after the bootstrap, we will create a differnt user, with differnt key, and then delte this one.
+    1. click `Next`
+    1. click `Create access key`
+    1. click `Download .csv key` save it to the root of the repo, and then click `Done`
+1. install aws cli: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+1. run `aws configure`
+1. paste the values from the csv file into the respective values
+1. run `terraform init`
+1. run `terraform plan`
+1. run `terraform apply -auto-approve`

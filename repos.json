@@ -1,0 +1,30 @@
+[
+  {
+    "repo": "BrettMoan/cloud-org-infra",
+    "policy_actions": [
+        "iam:CreateRole",
+        "iam:PutRolePolicy",
+        "iam:AttachRolePolicy",
+        "iam:CreatePolicy",
+        "iam:CreateOpenIDConnectProvider",
+        "iam:DeletePolicyVersion",
+        "iam:GetOpenIDConnectProvider",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:GetRole",
+        "iam:ListAttachedRolePolicies",
+        "iam:ListInstanceProfilesForRole",
+        "iam:ListPolicyVersions",
+        "iam:ListRolePolicies",
+        "iam:ListRoles",
+        "iam:DeleteRole",
+        "iam:DeleteRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:DeletePolicy",
+        "iam:DeleteOpenIDConnectProvider",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:TagRole",
+        "iam:UntagRole"
+    ]
+  }
+]
