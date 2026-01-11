@@ -9,6 +9,15 @@
     "auto_init": true
   },
   {
+    "name": "brettmoan",
+    "description": "public profile to demonstrate my personal skills.",
+    "visibility": "public",
+    "has_issues": true,
+    "has_wiki": false,
+    "has_projects": false,
+    "auto_init": false
+  },
+  {
     "name": "iam-oidc-permissions",
     "description": "Manage AWS IAM roles, policies, and OIDC trust for CI/CD.",
     "visibility": "public",
