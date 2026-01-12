@@ -1,7 +1,7 @@
 
 variable "repo" { type = string }
 variable "name" { type = string }
-variable "policy_actions" { type = list(string) }
+variable "policy_json" { type = string }
 
 variable "branch_ref" {
   type        = string
@@ -37,14 +37,7 @@ resource "aws_iam_role" "this" {
 resource "aws_iam_policy" "this" {
   name        = "${var.name}"
   description = "Policy for ${var.name} created by Terraform module."
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = var.policy_actions
-      Resource = "*"
-    }]
-  })
+  policy      = var.policy_json
 }
 
 resource "aws_iam_role_policy_attachment" "this" {

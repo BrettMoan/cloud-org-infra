@@ -1,0 +1,41 @@
+[
+  {
+    "name": "backend-api-service",
+    "description": "Permissions to run the backend-api",
+    "policy_json": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          "Resource": "arn:aws:logs:us-east-1:655366068412:*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem",
+            "dynamodb:Query"
+          ],
+          "Resource": "arn:aws:dynamodb:us-east-1:655366068412:table/tasks"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "sqs:SendMessage",
+            "sqs:GetQueueUrl",
+            "sqs:GetQueueAttributes"
+          ],
+          "Resource": "arn:aws:sqs:us-east-1:655366068412:tasks"
+        }
+      ]
+    }
+  }
+]

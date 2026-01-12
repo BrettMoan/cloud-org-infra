@@ -3,10 +3,10 @@
 This repository manages cloud organization infrastructure, including DNS, subdomain, routing, and broader cloud resource configuration using Terraform and AWS. It demonstrates modular, automated setup for cloud-native applications, organizational controls, and CI/CD powered by GitHub Actions and OIDC authentication.
 
 ## Features
-- DNS zone and record management (Route53)
-- Subdomain, routing, and cloud resource configuration
-- Organizational controls and modular infrastructure-as-code design
-- OIDC-enabled GitHub Actions workflow
+- [x] OIDC-enabled GitHub Actions workflow
+- [ ] DNS zone and record management (Route53)
+- [ ] Subdomain, routing, and cloud resource configuration
+- [ ] Organizational controls and modular infrastructure-as-code design
 
 ## Part of a Multi-Repo Demo
 This repo is part of a larger, opinionated infrastructure demonstration. See the [brettmoan main overview](https://github.com/brettmoan/README.md) for the full architecture and design rationale.

@@ -1,5 +1,6 @@
 locals {
   repos = jsondecode(file("${path.module}/repos.json"))
+  policies = jsondecode(file("${path.module}/policies.json"))
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -8,13 +9,21 @@ resource "aws_iam_openid_connect_provider" "github" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
+module "service_account_policy" {
+  source      = "./modules/policy"
+  for_each    = { for policy in local.policies : policy.name => policy }
+  name        = each.value.name
+  description = each.value.description
+  policy_json = jsonencode(each.value.policy_json)
+}
+
 module "github_oidc_role" {
-  source         = "./modules/github_oidc_role"
-  for_each       = { for repo in local.repos : repo.repo => repo }
-  repo           = each.value.repo
-  name           = split("/", each.value.repo)[1]
-  policy_actions = each.value.policy_actions
-  oidc_provider_arn  = aws_iam_openid_connect_provider.github.arn
+  source            = "./modules/github_oidc_role"
+  for_each          = { for repo in local.repos : repo.repo => repo }
+  repo              = each.value.repo
+  name              = split("/", each.value.repo)[1]
+  policy_json       = jsonencode(each.value.policy_json)
+  oidc_provider_arn = aws_iam_openid_connect_provider.github.arn
 }
 
 resource "random_id" "tfstate" {

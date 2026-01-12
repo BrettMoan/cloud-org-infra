@@ -1,52 +1,120 @@
 [
   {
     "repo": "BrettMoan/cloud-org-infra",
-    "policy_actions": [
-      "iam:AttachRolePolicy",
-      "iam:CreateOpenIDConnectProvider",
-      "iam:CreatePolicy",
-      "iam:CreatePolicyVersion",
-      "iam:CreateRole",
-      "iam:DeleteOpenIDConnectProvider",
-      "iam:DeletePolicy",
-      "iam:DeletePolicyVersion",
-      "iam:DeleteRole",
-      "iam:DeleteRolePolicy",
-      "iam:DetachRolePolicy",
-      "iam:GetOpenIDConnectProvider",
-      "iam:GetPolicy",
-      "iam:GetPolicyVersion",
-      "iam:GetRole",
-      "iam:ListAttachedRolePolicies",
-      "iam:ListInstanceProfilesForRole",
-      "iam:ListPolicyVersions",
-      "iam:ListRolePolicies",
-      "iam:ListRoles",
-      "iam:PutRolePolicy",
-      "iam:TagRole",
-      "iam:UntagRole",
-      "iam:UpdateAssumeRolePolicy",
-      "s3:CreateBucket",
-      "s3:DeleteBucket",
-      "s3:DeleteObject",
-      "s3:GetAccelerateConfiguration",
-      "s3:GetBucketAcl",
-      "s3:GetBucketCORS",
-      "s3:GetBucketLocation",
-      "s3:GetBucketLogging",
-      "s3:GetBucketObjectLockConfiguration",
-      "s3:GetBucketPolicy",
-      "s3:GetBucketRequestPayment",
-      "s3:GetBucketTagging",
-      "s3:GetBucketVersioning",
-      "s3:GetBucketWebsite",
-      "s3:GetEncryptionConfiguration",
-      "s3:GetLifecycleConfiguration",
-      "s3:GetObject",
-      "s3:GetReplicationConfiguration",
-      "s3:ListAllMyBuckets",
-      "s3:ListBucket",
-      "s3:PutObject"
-    ]
+    "policy_json": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "iam:AttachRolePolicy",
+            "iam:CreateOpenIDConnectProvider",
+            "iam:CreatePolicy",
+            "iam:CreatePolicyVersion",
+            "iam:CreateRole",
+            "iam:DeleteOpenIDConnectProvider",
+            "iam:DeletePolicy",
+            "iam:DeletePolicyVersion",
+            "iam:DeleteRole",
+            "iam:DeleteRolePolicy",
+            "iam:DetachRolePolicy",
+            "iam:GetOpenIDConnectProvider",
+            "iam:GetPolicy",
+            "iam:GetPolicyVersion",
+            "iam:GetRole",
+            "iam:ListAttachedRolePolicies",
+            "iam:ListInstanceProfilesForRole",
+            "iam:ListPolicyVersions",
+            "iam:ListRolePolicies",
+            "iam:ListRoles",
+            "iam:PutRolePolicy",
+            "iam:TagRole",
+            "iam:UntagRole",
+            "iam:UpdateAssumeRolePolicy"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:CreateBucket",
+            "s3:DeleteBucket",
+            "s3:GetBucketLocation",
+            "s3:ListBucket"
+          ],
+          "Resource": "arn:aws:s3:::brettmoan-*-tfstate-*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:PutObject",
+            "s3:DeleteObject"
+          ],
+          "Resource": "arn:aws:s3:::brettmoan-*-tfstate-*/*"
+        }
+      ]
+    }
+  },
+  {
+    "repo": "BrettMoan/backend-api",
+    "policy_json": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetBucketLocation",
+            "s3:ListBucket"
+          ],
+          "Resource": "arn:aws:s3:::brettmoan-*-tfstate-*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:PutObject",
+            "s3:DeleteObject"
+          ],
+          "Resource": "arn:aws:s3:::brettmoan-*-tfstate-*/backend-api/*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "lambda:CreateFunction",
+            "lambda:DeleteFunction",
+            "lambda:UpdateFunctionCode",
+            "lambda:UpdateFunctionConfiguration",
+            "lambda:GetFunction"
+          ],
+          "Resource": "arn:aws:lambda:us-east-1:655366068412:function:backend-api"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:CreateTable",
+            "dynamodb:DeleteTable",
+            "dynamodb:UpdateTable",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:DeleteItem",
+            "dynamodb:Scan",
+            "dynamodb:Query"
+          ],
+          "Resource": "arn:aws:dynamodb:us-east-1:655366068412:table/tasks"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "sns:CreateTopic",
+            "sns:DeleteTopic",
+            "sns:Publish",
+            "sns:GetTopicAttributes",
+            "sns:SetTopicAttributes"
+          ],
+          "Resource": "arn:aws:sns:us-east-1:655366068412:tasks"
+        }
+      ]
+    }
   }
 ]
