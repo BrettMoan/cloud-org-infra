@@ -25,7 +25,7 @@ jobs:
       - name: Configure AWS credentials for OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::655366068412:role/cloud-org-infra-tf
+          role-to-assume: arn:aws:iam::655366068412:role/cloud-org-infra
           aws-region: us-east-1
 
 
