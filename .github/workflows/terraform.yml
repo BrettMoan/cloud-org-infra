@@ -33,21 +33,20 @@ jobs:
         id: tf_workspace
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/prod/* ]]; then
-            echo "workspace=prod" >> $GITHUB_OUTPUT
+            workspace=prod
           elif [[ "${GITHUB_REF}" == refs/tags/qa/* ]]; then
-            echo "workspace=qa" >> $GITHUB_OUTPUT
+            workspace=qa
           elif [[ "${GITHUB_REF}" == refs/heads/main ]]; then
-            echo "workspace=default" >> $GITHUB_OUTPUT
+            workspace=default
           else
-            echo "workspace=dev" >> $GITHUB_OUTPUT
+            workspace=dev
           fi
+          echo "workspace=$workspace" >> $GITHUB_OUTPUT
+          terraform init -backend-config="key=cloud-org-infra/$workspace/terraform.tfstate"
 
       - name: Select/Create Terraform Workspace
         run: |
           terraform workspace select "${{ steps.tf_workspace.outputs.workspace }}" || terraform workspace new "${{ steps.tf_workspace.outputs.workspace }}"
-
-      - name: Terraform Init
-        run: terraform init -backend-config="key=cloud-org-infra/$(terraform workspace show)/terraform.tfstate"
 
       - name: Terraform Plan
         run: terraform plan
