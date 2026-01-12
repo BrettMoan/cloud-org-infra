@@ -9,6 +9,27 @@ resource "aws_iam_openid_connect_provider" "github" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
+
+resource "aws_iam_role" "lambda_exec" {
+	name = "lambda_exec_role"
+	assume_role_policy = jsonencode({
+		Version = "2012-10-17"
+		Statement = [{
+			Action = "sts:AssumeRole"
+			Effect = "Allow"
+			Principal = {
+				Service = "lambda.amazonaws.com"
+			}
+		}]
+	})
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy" {
+	role       = aws_iam_role.lambda_exec.name
+	policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+
 module "service_account_policy" {
   source      = "./modules/policy"
   for_each    = { for policy in local.policies : policy.name => policy }
