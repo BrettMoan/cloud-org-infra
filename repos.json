@@ -106,7 +106,15 @@
         {
           "Effect": "Allow",
           "Action": [
-            "iam:GetRole"
+            "lambda:*"
+          ],
+          "Resource": "arn:aws:lambda:us-east-1:655366068412:function:fastapi-serverless-api"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "iam:GetRole",
+            "iam:PassRole"
           ],
           "Resource": "arn:aws:iam::655366068412:role/lambda_exec_role"
         },
@@ -123,6 +131,20 @@
             "dynamodb:Query"
           ],
           "Resource": "arn:aws:dynamodb:us-east-1:655366068412:table/tasks"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "apigateway:*"
+          ],
+          "Resource": "arn:aws:apigateway:us-east-1::/apis/*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "apigateway:*"
+          ],
+          "Resource": "arn:aws:apigateway:us-east-1::/apis"
         },
         {
           "Effect": "Allow",
