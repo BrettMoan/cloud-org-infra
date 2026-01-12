@@ -1,0 +1,31 @@
+[
+  {
+    "name": "backend-api-lambda-role",
+    "description": "Role for Lambda function",
+    "policies": [
+      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+    ],
+    "assume_role_policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": { "Service": "lambda.amazonaws.com" },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "inline_policies": {
+      "dynamodb_tasks_admin": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": ["dynamodb:*"],
+            "Resource": "arn:aws:dynamodb:us-east-1:655366068412:table/tasks"
+          }
+        ]
+      }
+    }
+  }
+]

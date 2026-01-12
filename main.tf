@@ -1,6 +1,7 @@
 locals {
-  repos    = jsondecode(file("${path.module}/repos.json"))
-  policies = jsondecode(file("${path.module}/policies.json"))
+  repos    = jsondecode(file("${path.module}/resources/repos.json"))
+  roles = jsondecode(file("${path.module}/resources/roles.json"))
+  policies = jsondecode(file("${path.module}/resources/policies.json"))
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -9,28 +10,17 @@ resource "aws_iam_openid_connect_provider" "github" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
-
-resource "aws_iam_role" "lambda_exec" {
-  name = "lambda_exec_role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-    }]
-  })
+module "role" {
+  source             = "./modules/role"
+  for_each           = { for role in local.roles : role.name => role }
+  name               = each.value.name
+  description        = lookup(each.value, "description", "")
+  assume_role_policy = jsonencode(each.value.assume_role_policy)
+  policies           = lookup(each.value, "policies", [])
+  inline_policies    = lookup(each.value, "inline_policies", {})
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_policy" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
-
-module "service_account_policy" {
+module "policy" {
   source      = "./modules/policy"
   for_each    = { for policy in local.policies : policy.name => policy }
   name        = each.value.name

@@ -22,6 +22,7 @@
             "iam:GetPolicy",
             "iam:GetPolicyVersion",
             "iam:GetRole",
+            "iam:GetRolePolicy",
             "iam:ListAttachedRolePolicies",
             "iam:ListInstanceProfilesForRole",
             "iam:ListPolicyVersions",
@@ -116,7 +117,7 @@
             "iam:GetRole",
             "iam:PassRole"
           ],
-          "Resource": "arn:aws:iam::655366068412:role/lambda_exec_role"
+          "Resource": "arn:aws:iam::655366068412:role/backend-api-lambda-role"
         },
         {
           "Effect": "Allow",
