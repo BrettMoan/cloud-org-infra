@@ -28,8 +28,26 @@ jobs:
           role-to-assume: arn:aws:iam::655366068412:role/cloud-org-infra-tf
           aws-region: us-east-1
 
+
+      - name: Set Terraform Workspace
+        id: tf_workspace
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/prod/* ]]; then
+            echo "workspace=prod" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == refs/tags/qa/* ]]; then
+            echo "workspace=qa" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == refs/heads/main ]]; then
+            echo "workspace=default" >> $GITHUB_OUTPUT
+          else
+            echo "workspace=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Select/Create Terraform Workspace
+        run: |
+          terraform workspace select "${{ steps.tf_workspace.outputs.workspace }}" || terraform workspace new "${{ steps.tf_workspace.outputs.workspace }}"
+
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="key=cloud-org-infra/$(terraform workspace show)/terraform.tfstate"
 
       - name: Terraform Plan
         run: terraform plan
