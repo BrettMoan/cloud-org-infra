@@ -121,14 +121,7 @@
         {
           "Effect": "Allow",
           "Action": [
-            "dynamodb:CreateTable",
-            "dynamodb:DeleteTable",
-            "dynamodb:UpdateTable",
-            "dynamodb:GetItem",
-            "dynamodb:PutItem",
-            "dynamodb:DeleteItem",
-            "dynamodb:Scan",
-            "dynamodb:Query"
+            "dynamodb:*"
           ],
           "Resource": "arn:aws:dynamodb:us-east-1:655366068412:table/tasks"
         },
