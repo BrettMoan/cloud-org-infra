@@ -29,24 +29,20 @@ jobs:
           aws-region: us-east-1
 
 
-      - name: Set Terraform Workspace
-        id: tf_workspace
+      - name: Set Terraform Environment_Bucket 
+        id: tf_bucket
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/prod/* ]]; then
-            workspace=prod
-          elif [[ "${GITHUB_REF}" == refs/tags/qa/* ]]; then
-            workspace=qa
+            env=prod
+          elif [[ "${GITHUB_REF}" == refs/tags/stg/* ]]; then
+            env=stg
           elif [[ "${GITHUB_REF}" == refs/heads/main ]]; then
-            workspace=default
+            env=qa
           else
-            workspace=dev
+            env=dev
           fi
-          echo "workspace=$workspace" >> $GITHUB_OUTPUT
-          terraform init -backend-config="key=cloud-org-infra/$workspace/terraform.tfstate"
-
-      - name: Select/Create Terraform Workspace
-        run: |
-          terraform workspace select "${{ steps.tf_workspace.outputs.workspace }}" || terraform workspace new "${{ steps.tf_workspace.outputs.workspace }}"
+          echo "env=$env" >> $GITHUB_OUTPUT
+          terraform init -backend-config="bucket=brettmoan-$env-tfstate-a5d103ec"
 
       - name: Terraform Plan
         run: terraform plan

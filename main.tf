@@ -77,3 +77,19 @@ resource "random_id" "tfstate" {
 resource "aws_s3_bucket" "tfstate" {
   bucket = "brettmoan-tfstate-${random_id.tfstate.hex}"
 }
+
+resource "aws_s3_bucket" "tfstate_dev" {
+  bucket = "brettmoan-dev-tfstate-${random_id.tfstate.hex}"
+}
+
+resource "aws_s3_bucket" "tfstate_qa" {
+  bucket = "brettmoan-qa-tfstate-${random_id.tfstate.hex}"
+}
+
+resource "aws_s3_bucket" "tfstate_stg" {
+  bucket = "brettmoan-stg-tfstate-${random_id.tfstate.hex}"
+}
+
+resource "aws_s3_bucket" "tfstate_prod" {
+  bucket = "brettmoan-prod-tfstate-${random_id.tfstate.hex}"
+}
