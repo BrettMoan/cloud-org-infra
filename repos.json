@@ -106,6 +106,13 @@
         {
           "Effect": "Allow",
           "Action": [
+            "iam:GetRole"
+          ],
+          "Resource": "arn:aws:iam::655366068412:role/lambda_exec_role"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
             "dynamodb:CreateTable",
             "dynamodb:DeleteTable",
             "dynamodb:UpdateTable",
