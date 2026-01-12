@@ -15,7 +15,7 @@ variable "oidc_provider_arn" {
 }
 
 resource "aws_iam_role" "this" {
-  name = "${var.name}-tf"
+  name = "${var.name}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -35,7 +35,7 @@ resource "aws_iam_role" "this" {
 
 
 resource "aws_iam_policy" "this" {
-  name        = "${var.name}-tf"
+  name        = "${var.name}"
   description = "Policy for ${var.name} created by Terraform module."
   policy = jsonencode({
     Version = "2012-10-17"
