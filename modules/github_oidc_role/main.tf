@@ -1,3 +1,4 @@
+
 variable "repo" { type = string }
 variable "name" { type = string }
 variable "policy_actions" { type = list(string) }
@@ -8,10 +9,9 @@ variable "branch_ref" {
   description = "GitHub branch ref to allow in OIDC trust policy."
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
-  client_id_list = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+variable "oidc_provider_arn" {
+  type        = string
+  description = "ARN of the GitHub OIDC provider."
 }
 
 resource "aws_iam_role" "this" {
@@ -21,7 +21,7 @@ resource "aws_iam_role" "this" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Federated = aws_iam_openid_connect_provider.github.arn
+        Federated = var.oidc_provider_arn
       }
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {

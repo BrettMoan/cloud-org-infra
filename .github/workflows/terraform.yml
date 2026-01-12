@@ -22,7 +22,6 @@ jobs:
         with:
           terraform_version: 1.14.3
 
-
       - name: Configure AWS credentials for OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
